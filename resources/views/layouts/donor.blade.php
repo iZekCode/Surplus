@@ -7,6 +7,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    @if(session('error'))
+        <script>
+            alert("{{ session('error') }}");
+        </script>
+    @endif
     <nav class="navbar navbar-expand-lg navbar-dark bg-success mb-4">
         <div class="container">
             <a class="navbar-brand" href="{{ route('donor.dashboard') }}">Surplus Donor</a>

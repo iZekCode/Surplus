@@ -13,6 +13,11 @@
     </style>
 </head>
 <body>
+    @if(session('error'))
+        <script>
+            alert("{{ session('error') }}");
+        </script>
+    @endif
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{{ route('receiver.dashboard') }}">Surplus Receiver</a>

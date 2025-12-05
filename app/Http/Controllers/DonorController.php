@@ -16,33 +16,42 @@ class DonorController extends Controller
     public function index()
     {
         // $userId = Auth::id();
-        $userId = 1;
-        $user = User::find($userId);
+        $user = (object) [
+            'name' => session('name'),
+            'email' => session('email'),
+            'role' => session('role')
+        ];
 
-        $totalDonated = FoodItem::where('user_id', $userId)->where('status', 'claimed')->count();
-        $totalClaims = Claim::whereHas('fooditems', function($q) use ($userId) {
-            $q->where('user_id', $userId);
-        })->where('status', 'pending')->count();
+        // $totalDonated = FoodItem::where('user_id', $userId)->where('status', 'claimed')->count();
+        // $totalClaims = Claim::whereHas('fooditems', function($q) use ($userId) {
+        //     $q->where('user_id', $userId);
+        // })->where('status', 'pending')->count();
 
-        // --- PEMISAHAN DATA UNTUK TABS ---
+        // // --- PEMISAHAN DATA UNTUK TABS ---
         
-        // 1. Tab Aktif: Hanya yang available (Boleh Edit/Delete)
-        $activeItems = FoodItem::where('user_id', $userId)
-                        ->where('status', 'available')
-                        ->latest()
-                        ->get();
+        // // 1. Tab Aktif: Hanya yang available (Boleh Edit/Delete)
+        // $activeItems = FoodItem::where('user_id', $userId)
+        //                 ->where('status', 'available')
+        //                 ->latest()
+        //                 ->get();
 
-        // 2. Tab Proses: Sedang diklaim orang (Hanya boleh Cancel)
-        $ongoingItems = FoodItem::where('user_id', $userId)
-                        ->where('status', 'claimed')
-                        ->latest()
-                        ->get();
+        // // 2. Tab Proses: Sedang diklaim orang (Hanya boleh Cancel)
+        // $ongoingItems = FoodItem::where('user_id', $userId)
+        //                 ->where('status', 'claimed')
+        //                 ->latest()
+        //                 ->get();
 
-        // 3. Tab Riwayat: Selesai, Expired, atau Dibatalkan (Read Only)
-        $historyItems = FoodItem::where('user_id', $userId)
-                        ->whereIn('status', ['completed', 'expired', 'cancelled'])
-                        ->latest()
-                        ->get();
+        // // 3. Tab Riwayat: Selesai, Expired, atau Dibatalkan (Read Only)
+        // $historyItems = FoodItem::where('user_id', $userId)
+        //                 ->whereIn('status', ['completed', 'expired', 'cancelled'])
+        //                 ->latest()
+        //                 ->get();
+
+        $totalDonated = 0;
+        $totalClaims = 0;
+        $activeItems = collect();
+        $ongoingItems = collect();
+        $historyItems = collect();
 
         return view('donor.dashboard', compact(
             'user', 'totalDonated', 'totalClaims', 

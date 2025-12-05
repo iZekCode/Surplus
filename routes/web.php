@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DonorController;
 use App\Http\Controllers\ReceiverController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -9,7 +10,7 @@ Route::get('/', function () {
 });
 
 // Donor
-Route::prefix('donor')->group(function () {
+Route::prefix('donor')->middleware('donor')->group(function () {
     Route::get('/dashboard', [DonorController::class, 'index'])->name('donor.dashboard');
     Route::get('/food/create', [DonorController::class, 'create'])->name('donor.food.create');
     Route::post('/food', [DonorController::class, 'store'])->name('donor.food.store');
@@ -25,8 +26,13 @@ Route::prefix('donor')->group(function () {
     Route::put('/profile', [DonorController::class, 'updateProfile'])->name('donor.profile.update');
 });
 
-Route::prefix('receiver')->group(function () {
+Route::prefix('receiver')->middleware('receiver')->group(function () {
     Route::get('/dashboard', [ReceiverController::class, 'index'])->name('receiver.dashboard');
     Route::get('/food/{foodItem}', [ReceiverController::class, 'show'])->name('receiver.food.show');
     Route::get('/profile', [ReceiverController::class, 'profile'])->name('receiver.profile');
 });
+
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/session/create', [AuthController::class, 'createSession']);
+Route::get('/session/read', [AuthController::class, 'readSession']);
+Route::get('/session/delete', [AuthController::class, 'destroySession']);
